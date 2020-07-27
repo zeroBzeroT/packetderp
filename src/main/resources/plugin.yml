@@ -1,0 +1,16 @@
+name: ${project.name}
+description: ${project.description}
+version: ${project.version}
+api-version: ${api.version}
+prefix: ${mod.prefix}
+main: ${project.groupId}.${project.artifactId}.Mod
+authors: [blockparole]
+depend: [ProtocolLib]
+
+commands:
+  crash:
+    description: attempt to crash a client
+  ghostkick:
+    description: drop packets to a client
+  ghostban:
+    description: drop packets to a client (for the whole serversession)
