@@ -3,7 +3,6 @@ package not.hub.packetderp;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,7 +13,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -22,17 +20,11 @@ import java.util.concurrent.ExecutionException;
 
 public final class Mod extends JavaPlugin implements Listener {
 
-    private static final PacketContainer FADE = new PacketContainer(PacketType.Play.Server.GAME_STATE_CHANGE);
-
     private final Set<UUID> kickUuids = new HashSet<>();
     private final Set<UUID> banUuids = new HashSet<>();
 
     @Override
     public void onEnable() {
-
-        FADE.getModifier().writeDefaults();
-        FADE.getIntegers().write(0, 7);
-        FADE.getFloat().write(0, 420f);
 
         getServer().getPluginManager().registerEvents(this, this);
 
@@ -86,7 +78,8 @@ public final class Mod extends JavaPlugin implements Listener {
                 try {
                     uuid = MojangApi.getUuidByName(name);
                 } catch (ExecutionException e) {
-                    sender.sendMessage("Unable to find UUID for given name: " + name);
+                    sender.sendMessage("Unable to fetch UUID for given name: " + name);
+                    getLogger().info("Unable to fetch UUID for given name: " + name + "-" + e.getMessage());
                     return false;
                 }
             } else {
@@ -97,10 +90,11 @@ public final class Mod extends JavaPlugin implements Listener {
             if (!banUuids.remove(uuid)) {
                 banUuids.add(uuid);
                 sender.sendMessage("Ghost banning: " + name);
+                getLogger().info("Ghost banning: " + name);
             } else {
                 sender.sendMessage("Removing ghost ban for: " + name);
+                getLogger().info("Removing ghost ban for: " + name);
             }
-
             return true;
 
         }
@@ -113,16 +107,7 @@ public final class Mod extends JavaPlugin implements Listener {
         if (command.getLabel().equalsIgnoreCase("ghostkick")) {
             kickUuids.add(target.getUniqueId());
             sender.sendMessage("Ghost kicking: " + target.getName());
-            return true;
-
-        }
-
-        if (command.getLabel().equalsIgnoreCase("crash")) {
-            try {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(target, FADE);
-            } catch (InvocationTargetException e) {
-                sender.sendMessage("Unable to send package! " + e.getMessage());
-            }
+            getLogger().info("Ghost kicking: " + target.getName());
             return true;
         }
 
@@ -132,12 +117,16 @@ public final class Mod extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerLoginEvent event) {
-        kickUuids.remove(event.getPlayer().getUniqueId());
+        if (kickUuids.remove(event.getPlayer().getUniqueId())) {
+            getLogger().info("Resuming normal connection for: " + event.getPlayer().getName());
+        }
     }
 
     @EventHandler
     public void onPlayerLeaveEvent(PlayerQuitEvent event) {
-        kickUuids.remove(event.getPlayer().getUniqueId());
+        if (kickUuids.remove(event.getPlayer().getUniqueId())) {
+            getLogger().info("Resuming normal connection for: " + event.getPlayer().getName());
+        }
     }
 
 }

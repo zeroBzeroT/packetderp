@@ -8,8 +8,6 @@ authors: [blockparole]
 depend: [ProtocolLib]
 
 commands:
-  crash:
-    description: attempt to crash a client
   ghostkick:
     description: drop packets to a client
   ghostban:
