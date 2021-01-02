@@ -6,7 +6,7 @@
 
     <groupId>not.hub.packetderp</groupId>
     <artifactId>PacketDerp</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <name>PacketDerp</name>

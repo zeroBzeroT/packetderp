@@ -13,6 +13,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -20,11 +24,23 @@ import java.util.stream.Collectors;
 
 public final class Mod extends JavaPlugin implements Listener {
 
+    public static final String BAN_FILE = "ghostbans.txt";
     private final HashMap<UUID, String> kickUuids = new HashMap<>();
     private final HashMap<UUID, String> banUuids = new HashMap<>();
 
     @Override
     public void onEnable() {
+
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            new File(BAN_FILE).createNewFile();
+            Files
+                    .readAllLines(Paths.get(BAN_FILE))
+                    .forEach(s -> banUuids.put(UUID.fromString(s.substring(0, 36)), s.substring(37)));
+        } catch (IOException e) {
+            getLogger().warning(e.getMessage());
+            return;
+        }
 
         getServer().getPluginManager().registerEvents(this, this);
 
@@ -118,7 +134,21 @@ public final class Mod extends JavaPlugin implements Listener {
                     logAndSendMessage("Removed ghostban for: " + name, commandSender);
                 } else {
                     commandSender.sendMessage("No existing ghostban for: " + name);
+                    return false;
                 }
+            }
+
+            try {
+                Files.write(Paths.get(BAN_FILE), banUuids
+                        .entrySet()
+                        .stream()
+                        .map(entry -> entry.getKey().toString() + " " + entry.getValue())
+                        .collect(Collectors.joining(System.lineSeparator()))
+                        .getBytes()
+                );
+            } catch (IOException e) {
+                getLogger().warning(e.getMessage());
+                return false;
             }
 
             return true;
