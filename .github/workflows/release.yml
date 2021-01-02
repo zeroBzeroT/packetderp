@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: get commit info
-        run: echo ::set-env name=SHA::"$GITHUB_SHA"
+        run: echo "SHA=$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: prepare release
         id: create_release
@@ -41,7 +41,7 @@ jobs:
           restore-keys: '${{ runner.os }}-m2'
 
       - name: run maven package
-        run: mvn -B package --file pom.xml
+        run: mvn --batch-mode --show-version --errors package --file pom.xml
 
       - name: upload release asset
         uses: csexton/release-asset-action@v2
