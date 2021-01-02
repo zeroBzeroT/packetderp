@@ -1,14 +1,18 @@
 name: ${project.name}
 description: ${project.description}
 version: ${project.version}
-api-version: ${api.version}
-prefix: ${mod.prefix}
-main: ${project.groupId}.${project.artifactId}.Mod
-authors: [blockparole]
-depend: [ProtocolLib]
+prefix: ${project.name}
+api-version: ${paper-api.version}
+main: ${project.groupId}.Mod
+authors: [ blockparole ]
+depend: [ ProtocolLib ]
 
 commands:
   ghostkick:
-    description: drop packets to a client
+    description: drop packets to a specified user until rejoin
   ghostban:
-    description: drop packets to a client (for the whole serversession)
+    description: drop packets to a specified user until unban
+  ghostunban:
+    description: unban specified user
+  ghostlist:
+    description: list active ghost kicks and bans
