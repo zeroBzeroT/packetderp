@@ -1,41 +1,5 @@
-# intellij
-.idea/
-out/
-*.iml
-*.ipr
-*.iws
-
-# maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-.mvn/timing.properties
-
-# windows
-Thumbs.db
-[Dd]esktop.ini
-*.lnk
-
-# linux
-*~
-.Trash-*
-.nfs*
-.fuse_hidden*
-.directory
-
-# mac
-.DS_Store
-._*
-.AppleDouble
-.LSOverride
-.AppleDB
-.AppleDesktop
-.apdisk
-
-# test env
-scripts/
-server/
+/.idea/
+/server/
+/target/
+/*.iml
+/pom.xml
