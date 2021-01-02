@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>not.hub</groupId>
-    <artifactId>packetderp</artifactId>
+    <artifactId>PacketDerp</artifactId>
     <version>0.2.0</version>
     <packaging>jar</packaging>
 
@@ -21,6 +21,7 @@
     </properties>
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -89,4 +90,5 @@
             <version>859ba4e</version>
         </dependency>
     </dependencies>
+
 </project>
