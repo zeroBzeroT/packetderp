@@ -4,7 +4,7 @@ version: ${project.version}
 prefix: ${project.name}
 api-version: ${paper-api.version}
 main: ${project.groupId}.Mod
-authors: [ blockparole ]
+authors: [ nothub ]
 depend: [ ProtocolLib ]
 
 commands:
